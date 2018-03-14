@@ -137,28 +137,21 @@ class FuturesSpec extends FunSuite with Matchers {
     val executorService = Executors.newFixedThreadPool(5)
     implicit val executionContext = ExecutionContext.fromExecutor(executorService)
 
-    val futures: Seq[Future[Int]] = List.fill(10) {
+    val futures: Seq[Future[LocalDateTime]] = List.fill(10) {
       Future {
-        10
+        LocalDateTime.now()
       }
     }
 
     Thread.sleep(10000)
-//    val eventualDates: Future[Seq[LocalDateTime]] = Future.sequence(futures)
-//    val eventualInt = eventualDates.map(dates => dates.map(d => d.getSecond).sum)
-//    eventualInt.foreach(println)
-//    Await.ready(eventualInt, Duration(10, TimeUnit.SECONDS))
+    val eventualDates: Future[Seq[LocalDateTime]] = Future.sequence(futures)
+    val eventualInt = eventualDates.map(dates => dates.map(d => d.getSecond).sum)
+    eventualInt.foreach(println)
+    Await.ready(eventualInt, Duration(10, TimeUnit.SECONDS))
   }
 
   test("Proper parse") {
-    def parseNumber(s:String):Try[Int] = {
-      try {
-        Success(Integer.parseInt(s))
-      } catch {
-        case t:NumberFormatException => Failure(t)
-      }
-    }
-
+    def parseNumber(s:String):Try[Int] = Try{Integer.parseInt(s)}
     //val triedInt = parseNumber("40").map(x => x + 30)
     val triedInt = for (i <- parseNumber("40")) yield i + 30
     println(triedInt.getOrElse(-1))

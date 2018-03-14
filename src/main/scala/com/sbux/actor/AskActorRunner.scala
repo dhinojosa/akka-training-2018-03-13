@@ -18,6 +18,9 @@ object AskActorRunner extends App {
   val future: Future[Any] = actorRef ? "Hello"
   future.foreach(println)
 
+  val future2: Future[Any] = actorRef ? "Read value"
+  future2.foreach(println) //local
+
   println("Press Enter to terminate")
   scala.io.StdIn.readLine()
 
