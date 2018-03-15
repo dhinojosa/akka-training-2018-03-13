@@ -1,20 +1,24 @@
 package com.sbux.router
 
-import akka.actor.{Actor, Props, Terminated}
+import akka.actor.{Actor, ActorRef, Props, Terminated}
 import akka.event.Logging
-import akka.routing.{ActorRefRoutee, RoundRobinRoutingLogic, Router}
+import akka.routing.{ActorRefRoutee, RoundRobinRoutingLogic, Router, ScatterGatherFirstCompletedRoutingLogic}
 
 import scala.language.postfixOps
+import scala.concurrent.duration._
 
 class MasterActor extends Actor {
     val log = Logging.getLogger(context.system, this)
     var router: Router = {
         val list = (1 to 10)
+            .view
             .map(i => context.actorOf(Props[WorkerActor], s"worker-$i"))
             .map(actorRef => context watch actorRef)
             .map(actorRef => ActorRefRoutee.apply(actorRef))
+            .force
+            .toIndexedSeq
 
-        Router(RoundRobinRoutingLogic(), list)
+        Router(ScatterGatherFirstCompletedRoutingLogic(1 second), list)
     }
 
     override def receive: Receive = {
