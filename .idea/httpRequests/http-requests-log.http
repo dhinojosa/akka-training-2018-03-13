@@ -1,0 +1,8 @@
+DELETE http://localhost:8080/bar
+Accept: */*
+Cache-Control: no-cache
+
+<> 2018-03-15T030155.200.txt
+
+###
+

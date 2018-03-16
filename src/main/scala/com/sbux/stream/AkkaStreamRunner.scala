@@ -12,15 +12,9 @@ import scala.concurrent.duration._
 import scala.util.{Failure, Success}
 
 object AkkaStreamRunner extends App {
-    implicit val actorSystem = ActorSystem("Akka-Stream-System")
-    implicit val materializer = ActorMaterializer()
+    implicit val actorSystem: ActorSystem = ActorSystem("Akka-Stream-System")
+    implicit val materializer: ActorMaterializer = ActorMaterializer()
     import actorSystem.dispatcher
-
-
-    //Source
-    //Flow
-    //Sink
-
 
     private val mapWithThread = Flow[String].map { x => println("0: " + Thread.currentThread().getName); x }
 
