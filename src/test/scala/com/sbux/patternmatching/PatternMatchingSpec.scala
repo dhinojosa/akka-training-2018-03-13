@@ -4,6 +4,8 @@ import com.sbux.entities.Employee
 import org.scalatest.{FunSuite, Matchers}
 
 class PatternMatchingSpec extends FunSuite with Matchers {
+
+
   test("A basic pattern match") {
     val e = Employee("Marc", "Nagel")
     val result = e match {
